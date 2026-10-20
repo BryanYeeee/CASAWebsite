@@ -16,7 +16,14 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /website/CASAWebsite
+            set -e 
+            
             git pull origin master
             npm ci --production
+            
             npm run build
-            pm2 reload nextjs-app
+            
+            # Only reloads the website if the build passes 100% perfectly
+            pm2 reload nextjs-app || PORT=3000 pm2 start .next/standalone/server.js --name "nextjs-app"
+            pm2 save
+
