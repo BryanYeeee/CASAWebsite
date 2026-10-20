@@ -19,7 +19,8 @@ jobs:
             set -e 
             
             git pull origin master
-            npm ci --production
+
+            npm install
             
             npm run build
             
